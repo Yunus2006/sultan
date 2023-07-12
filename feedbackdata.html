@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div>
+    <h2>Feedback Data</h2>
+    <button onclick="downloadFeedback()">Download Feedback</button>
+  </div>
+
+  <script>
+    // Retrieve feedback data from local storage
+    var feedbackData = JSON.parse(localStorage.getItem('feedbackData'));
+
+    function generateCSV() {
+      var csvContent = 'Name,Email,Telephone,Rating\n';
+      for (var i = 0; i < feedbackData.length; i++) {
+        csvContent += feedbackData[i].name + ',' + feedbackData[i].email + ',' +
+          feedbackData[i].telephone + ',' + feedbackData[i].rating + '\n';
+      }
+      return csvContent;
+    }
+
+    function downloadFeedback() {
+      var csvData = generateCSV();
+      var blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      var link = document.createElement('a');
+      if (link.download !== undefined) {
+        var url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'feedback.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  </script>
+</body>
+</html>
